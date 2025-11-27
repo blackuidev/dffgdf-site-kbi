@@ -1,30 +1,66 @@
-import React, { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import Home from '../pages/Home';
+import AboutUs from '../pages/AboutUs';
+import Products from '../pages/Products';
+import ProductDetail from '../pages/ProductDetail';
+import Cart from '../pages/Cart';
+import Checkout from '../pages/Checkout';
+import Contact from '../pages/Contact';
+import NotFound from '../pages/NotFound';
 
-const Home = lazy(() => import('../pages/Home'));
-const Products = lazy(() => import('../pages/Products'));
-const ProductDetail = lazy(() => import('../pages/ProductDetail'));
-const Cart = lazy(() => import('../pages/Cart'));
-const Checkout = lazy(() => import('../pages/Checkout'));
-const AboutUs = lazy(() => import('../pages/AboutUs'));
-const Contact = lazy(() => import('../pages/Contact'));
-const NotFound = lazy(() => import('../pages/NotFound'));
+const PageMotion = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
+};
 
-const RoutesComponent = () => {
+const AnimatedRoute = ({ children, path }: { children: React.ReactNode; path: string }) => (
+  <Route
+    path={path}
+    element={
+      <motion.div
+        variants={PageMotion}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="page-transition-container"
+      >
+        {children}
+      </motion.div>
+    }
+  />
+);
+
+const AppRoutes = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/home" element={<Home />} />
+        <AnimatedRoute path="/about">
+          <AboutUs />
+        </AnimatedRoute>
+        <AnimatedRoute path="/products">
+          <Products />
+        </AnimatedRoute>
+        <AnimatedRoute path="/product/:id">
+          <ProductDetail />
+        </AnimatedRoute>
+        <AnimatedRoute path="/cart">
+          <Cart />
+        </AnimatedRoute>
+        <AnimatedRoute path="/checkout">
+          <Checkout />
+        </AnimatedRoute>
+        <AnimatedRoute path="/contact">
+          <Contact />
+        </AnimatedRoute>
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Suspense>
+    </Router>
   );
 };
 
-export default RoutesComponent;
+export default AppRoutes;
