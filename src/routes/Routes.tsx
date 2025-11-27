@@ -1,18 +1,30 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-import Index from '../pages/Index';
-import NotFound from '../pages/NotFound';
+const Home = lazy(() => import('../pages/Home'));
+const Products = lazy(() => import('../pages/Products'));
+const ProductDetail = lazy(() => import('../pages/ProductDetail'));
+const Cart = lazy(() => import('../pages/Cart'));
+const Checkout = lazy(() => import('../pages/Checkout'));
+const AboutUs = lazy(() => import('../pages/AboutUs'));
+const Contact = lazy(() => import('../pages/Contact'));
+const NotFound = lazy(() => import('../pages/NotFound'));
 
-const RoutesConfig = () => {
+const RoutesComponent = () => {
   return (
-    <Router>
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+    </Suspense>
   );
 };
 
-export default RoutesConfig;
+export default RoutesComponent;
